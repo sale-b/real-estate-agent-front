@@ -43,6 +43,7 @@
 </template>
 <script>
 import axios from "axios";
+import { mapActions } from "vuex";
 
 export default {
   name: "register-form",
@@ -60,6 +61,7 @@ export default {
     };
   },
   methods: {
+     ...mapActions(["setId", "setAuthToken"]),
     validEmail: function (email) {
       var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return re.test(email);
@@ -95,7 +97,9 @@ export default {
             email: this.emailadress,
             password: this.password,
           })
-          .then(() => {
+          .then((res) => {
+            this.setAuthToken(res.headers["x-auth-token"]);
+            this.setId(res.data.id);
             this.$router.push("user");
           })
             .catch((error) => {
