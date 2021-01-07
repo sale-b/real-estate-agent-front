@@ -14,6 +14,10 @@
         <md-icon>person</md-icon>
         <p>User Profile</p>
       </sidebar-link>
+
+      <div class="md-layout-item md-medium-size-100 md-size-100">
+        <filters-form data-background-color="blue"> </filters-form>
+      </div>
     </side-bar>
 
     <div class="main-panel">
@@ -28,13 +32,15 @@
 import TopNavbar from "./TopNavbar.vue";
 import DashboardContent from "./Content.vue";
 import { mapGetters } from "vuex";
+import FiltersForm from "@/pages/Filters/FiltersForm.vue";
 
 export default {
   components: {
     TopNavbar,
     DashboardContent,
+    FiltersForm,
   },
-  computed: mapGetters(['userId']), 
+  computed: mapGetters(["userId"]),
   data() {
     return {
       sidebarBackground: "green",

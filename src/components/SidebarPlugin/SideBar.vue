@@ -13,7 +13,7 @@
       </a>
 
       <a
-        href="/"
+        :href="'/'" v-on:click.prevent="$router.push( 'home' )"
         class="simple-text logo-normal"
       >
         {{ title }}

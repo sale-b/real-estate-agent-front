@@ -1,13 +1,14 @@
 import DashboardLayout from "@/pages/Layout/DashboardLayout.vue";
 
 import UserProfile from "@/pages/UserProfile.vue";
-import Register from "@/pages/Register.vue";
+import LoginRegister from "@/pages/LoginRegister.vue";
+import Home from "@/pages/Home.vue";
 
 const routes = [
   {
     path: "/",
     component: DashboardLayout,
-    redirect: "/login-register",
+    redirect: "/home",
     children: [
       {
         path: "user",
@@ -17,7 +18,12 @@ const routes = [
       {
         path: "login-register",
         name: "Login Register",
-        component: Register
+        component: LoginRegister
+      },
+      {
+        path: "home",
+        name: "Home",
+        component: Home
       }
     ]
   }
