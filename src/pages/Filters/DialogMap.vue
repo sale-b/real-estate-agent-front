@@ -38,6 +38,7 @@ export default {
     },
     read() {
       this.$refs.map.read();
+      this.$sidebar.displaySidebar(!this.$sidebar.showSidebar);
     },
     undo() {
       this.$refs.map.undo();
