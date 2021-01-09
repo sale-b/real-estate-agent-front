@@ -8,7 +8,7 @@ const routes = [
   {
     path: "/",
     component: DashboardLayout,
-    redirect: "/home",
+    redirect: "/home/1",
     children: [
       {
         path: "user",
@@ -21,7 +21,7 @@ const routes = [
         component: LoginRegister
       },
       {
-        path: "home",
+        path: "home/:id",
         name: "Home",
         component: Home
       }

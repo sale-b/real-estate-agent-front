@@ -69,7 +69,6 @@ export default {
 
     this.draw.on("drawstart", this.clear);
   },
-  watch: {},
   methods: {
     clear() {
       this.map.getLayers().getArray()[1].getSource().clear();

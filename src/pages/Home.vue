@@ -6,20 +6,25 @@
       >
         <ad-card
           v-for="ad in ads"
-          :key="ad.title"
-          :title="ad.title"
-          :content="ad.content"
-          :img-url="ad.imgUrl"
-          :date="ad.date"
+          :key="ad.id"
+          :title="ad.id"
+          :content="ad.description"
+          :img-url="ad.img_url"
+          :date="getFormattedDate(ad.created_on)"
           :phone="ad.phone"
-          :space="ad.space"
-          :rooms="ad.rooms"
+          :space="ad.living_space_area"
+          :rooms="ad.rooms_number"
           :furniture="ad.furniture"
         ></ad-card>
       </div>
     </div>
     <div class="pagination-holder">
-      <pagination type="info" v-model="infoPagination" :page-count="3">
+      <pagination
+        type="info"
+        v-on:input="change"
+        v-model="infoPagination"
+        :page-count="pageCount"
+      >
       </pagination>
     </div>
   </div>
@@ -28,42 +33,66 @@
 <script>
 import Pagination from "./../components/Pagination";
 import AdCard from "../components/Cards/AdCard.vue";
+import axios from "axios";
+
 export default {
   components: {
     Pagination,
     AdCard,
   },
+  watch: {
+    $route(to, from) {
+      this.getData(to.params.id);
+    },
+  },
   data() {
     return {
-      ads: [
-        {
-          title: "Novi Beograd, Blok 28,Milutina Milankovića 57",
-          content:
-            "Savski venac, Dedinje-Beli dvor, Velisava Vulovića 144m2 4.0, 144m2, 1/2, EG, terasa x2, parking, podrum, interfon, telefon U prilici smo da vam ponudimo stan u izgradnji na ekskluzivnoj",
-          imgUrl:
-            "https://img.halooglasi.com//slike/oglasi/Thumbs/200802/m/prodaja-luksuznog-stana-na-vracaru-5425635800461-71792244221.jpg",
-          date: "18-06-2020",
-          phone: "123 456 789",
-          space: "36,18",
-          rooms: "1.5",
-          furniture: true,
-        },
-        {
-          title: "Novi Beograd, Blok 28,Milutina Milankovića 27",
-          content:
-            "Novi Beograd, Dedinje-Beli dvor, Velisava Vulovića 144m2 4.0, 144m2, 1/2, EG, terasa x2, parking, podrum, interfon, telefon U prilici smo da vam ponudimo stan u izgradnji na ekskluzivnoj",
-          imgUrl:
-            "https://img.halooglasi.com//slike/oglasi/Thumbs/200308/m/vracar-sumatovacka-prodaja-lux-stanova-izgrad-5425635286073-71790906402.jpg",
-          date: "13-06-2020",
-          phone: "023 456 789",
-          space: "143,18",
-          rooms: "5+",
-          furniture: false,
-        },
-      ],
-      infoPagination: 2,
+      ads: null,
+      infoPagination: parseInt(this.$route.params.id),
+      pageCount: 1,
     };
   },
-  created() {},
+  created() {
+    this.getData(this.infoPagination);
+  },
+  methods: {
+    getFormattedDate(string) {
+      var date = new Date(string);
+      let year = date.getFullYear();
+      let month = (1 + date.getMonth()).toString().padStart(2, "0");
+      let day = date.getDate().toString().padStart(2, "0");
+
+      return month + "/" + day + "/" + year;
+    },
+    scrollToTop() {
+      window.scrollTo(0, 0);
+    },
+    notifyVue(verticalAlign, horizontalAlign, message) {
+      this.$notify({
+        message: message,
+        icon: "add_alert",
+        horizontalAlign: horizontalAlign,
+        verticalAlign: verticalAlign,
+        type: "danger",
+      });
+    },
+    change(page) {
+      this.$router.push(this.infoPagination.toString()).catch((err) => {});
+    },
+    getData(page) {
+      axios
+        .get("http://localhost:9090/page/" + page)
+        .then((res) => {
+          this.ads = res.data.ads;
+          this.infoPagination = res.data.pagination.currentPage;
+          this.pageCount = res.data.pagination.totalPages;
+          this.scrollToTop();
+        })
+        .catch((error) => {
+          console.log(error);
+          this.notifyVue("top", "center", error.response.data);
+        });
+    },
+  },
 };
 </script>
