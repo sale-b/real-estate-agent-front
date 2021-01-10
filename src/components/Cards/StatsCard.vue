@@ -1,6 +1,6 @@
 <template>
   <md-card class="md-card-stats">
-    <md-card-header :data-background-color="dataBackgroundColor">
+    <md-card-header class="img-head" :data-background-color="dataBackgroundColor">
       <slot name="header"></slot>
     </md-card-header>
 

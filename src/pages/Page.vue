@@ -7,7 +7,7 @@
         <ad-card
           v-for="ad in ads"
           :key="ad.id"
-          :title="ad.id"
+          :tittle="ad.tittle"
           :content="ad.description"
           :img-url="ad.img_url"
           :date="getFormattedDate(ad.created_on)"
@@ -15,6 +15,7 @@
           :space="ad.living_space_area"
           :rooms="ad.rooms_number"
           :furniture="ad.furniture"
+          :id="ad.id"
         ></ad-card>
       </div>
     </div>
@@ -89,7 +90,6 @@ export default {
           this.scrollToTop();
         })
         .catch((error) => {
-          console.log(error);
           this.notifyVue("top", "center", error.response.data);
         });
     },

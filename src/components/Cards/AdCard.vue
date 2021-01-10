@@ -1,20 +1,19 @@
 <template>
   <stats-card data-background-color="green">
     <template slot="header">
-      <img
-        class="ad-pic"
-        :src="imgUrl"
-        alt="Apartment img"
-      />
+      <img class="ad-pic" :src="imgUrl" alt="Apartment img" />
     </template>
 
     <template slot="content">
-      <h4 class="category">
-        {{ title }}
+      <h4
+        v-on:click.prevent="$router.push('/ad/' + id).catch((err) => {})"
+        class="category"
+      >
+        {{ tittle }}
       </h4>
       <br />
-      <p class="title">
-        {{content}}
+      <p class="tittle">
+        {{ content }}
       </p>
     </template>
 
@@ -22,28 +21,28 @@
       <div>
         <div class="stats" style="padding: 3px 10px 0px 0px">
           <md-icon>date_range</md-icon>
-          {{date}}
+          {{ date }}
         </div>
 
         <div class="stats" style="padding: 3px 10px 0px 0px">
           <md-icon>perm_phone_msg</md-icon>
-          <a :href="'tel:' + phone">{{phone}}</a>
+          <a :href="'tel:' + phone">{{ phone }}</a>
         </div>
 
         <div class="stats" style="padding: 0px 10px 0px 0px">
           <div>Living space area:</div>
-          {{space}} m<sup>2</sup>
+          {{ space }} m<sup>2</sup>
         </div>
       </div>
       <div>
         <div class="stats" style="padding: 3px 10px 0px 0px">
           <div>Rooms number:</div>
-          {{rooms}}
+          {{ rooms }}
         </div>
 
         <div class="stats" style="padding: 0px 10px 0px 0px">
           <div>Furniture:</div>
-          {{furniture ? 'Provided' : 'Not provided' }}
+          {{ furniture ? "Provided" : "Not provided" }}
         </div>
       </div>
     </template>
@@ -57,7 +56,17 @@ export default {
   components: {
     StatsCard,
   },
-  props: ["title", "content", "imgUrl", "date", "phone", "space", "rooms", "furniture"],
+  props: [
+    "id",
+    "tittle",
+    "content",
+    "imgUrl",
+    "date",
+    "phone",
+    "space",
+    "rooms",
+    "furniture",
+  ],
 };
 </script>
 
@@ -91,7 +100,7 @@ a:focus {
   border-radius: 0 !important;
 }
 
-.md-card-header {
+.img-head {
   padding: 0 !important;
 }
 
@@ -105,5 +114,10 @@ img.ad-pic {
   width: 120px;
   height: 120px;
   object-fit: cover;
+}
+
+h4:hover {
+  color: rgb(24, 42, 204) !important;
+  cursor: pointer;
 }
 </style>
