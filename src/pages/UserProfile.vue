@@ -19,6 +19,8 @@
             :space="ad.living_space_area"
             :rooms="ad.rooms_number"
             :furniture="ad.furniture"
+            @click.native="openDetails(ad.id)"
+            ref="adDetails"
           ></ad-card>
         </div>
       </div>
@@ -41,7 +43,7 @@ export default {
       ads: null,
     };
   },
-  created() {
+  mounted() {
     axios
       .post("http://localhost:9090/page", {
           filters: null,
@@ -58,6 +60,9 @@ export default {
       });
   },
   methods: {
+     openDetails(id) {
+     this.$refs.adDetails[id-1].openDetails(id);
+    },
     getFormattedDate(string) {
       var date = new Date(string);
       let year = date.getFullYear();

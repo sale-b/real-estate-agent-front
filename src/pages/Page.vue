@@ -17,7 +17,7 @@
           :furniture="ad.furniture"
           :id="ad.id"
           @click.native="openDetails(ad.id)"
-           ref="childComponent"
+           ref="adDetails"
         ></ad-card>
       </div>
     </div>
@@ -55,12 +55,12 @@ export default {
       pageCount: 1,
     };
   },
-  created() {
+  mounted() {
     this.getData(this.infoPagination);
   },
   methods: {
     openDetails(id) {
-     this.$refs.childComponent[id-1].openDetails(id);
+     this.$refs.adDetails[id-1].openDetails(id);
     },
     getFormattedDate(string) {
       var date = new Date(string);

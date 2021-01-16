@@ -41,7 +41,7 @@ export default {
       email: null,
     };
   },
-  created() {
+  mounted() {
     axios
       .get("http://localhost:9090/user/" + this.userId, {
         headers: { "x-auth-token": this.authToken },

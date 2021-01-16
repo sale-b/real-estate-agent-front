@@ -85,7 +85,7 @@ images(){
   }
 }
   },
-  created() {
+  mounted() {
      this.getData(this.infoPagination);
   },
   methods: {
