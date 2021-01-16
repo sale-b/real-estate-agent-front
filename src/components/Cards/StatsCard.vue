@@ -24,3 +24,10 @@ export default {
   }
 };
 </script>
+
+<style>
+.md-card-stats:hover {
+  opacity: 0.7;
+  cursor: pointer;
+  }
+</style>

@@ -43,11 +43,16 @@ export default {
   },
   created() {
     axios
-      .get("http://localhost:9090/page/" + "3")
-      .then((res) => {
-        this.ads = res.data.ads;
-        this.scrollToTop();
-      })
+      .post("http://localhost:9090/page", {
+          filters: null,
+          page: 1,
+        })
+        .then((res) => {
+          this.ads = res.data.ads;
+          // this.infoPagination = res.data.pagination.currentPage;
+          // this.pageCount = res.data.pagination.totalPages;
+          this.scrollToTop();
+        })
       .catch((error) => {
         this.notifyVue("top", "center", error.response.data);
       });

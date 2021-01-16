@@ -16,6 +16,8 @@
           :rooms="ad.rooms_number"
           :furniture="ad.furniture"
           :id="ad.id"
+          @click.native="openDtails(ad.id)"
+           ref="childComponent"
         ></ad-card>
       </div>
     </div>
@@ -57,6 +59,9 @@ export default {
     this.getData(this.infoPagination);
   },
   methods: {
+    openDetails(id) {
+     this.$refs.childComponent[id-1].openDetails(id);
+    },
     getFormattedDate(string) {
       var date = new Date(string);
       let year = date.getFullYear();
@@ -82,7 +87,10 @@ export default {
     },
     getData(page) {
       axios
-        .get("http://localhost:9090/page/" + page)
+        .post("http://localhost:9090/page", {
+          filters: null,
+          page: page,
+        })
         .then((res) => {
           this.ads = res.data.ads;
           this.infoPagination = res.data.pagination.currentPage;

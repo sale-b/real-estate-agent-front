@@ -9,6 +9,42 @@
         <div class="md-layout">
           <div class="md-layout-item md-small-size-100 md-size-100">
             <md-field>
+              <label for="locations">Locations</label>
+              <md-select
+                v-model="selectedLocations"
+                name="locations"
+                id="locations"
+                multiple
+              >
+                <md-option
+                  v-for="location in locations.locations"
+                  :key="location"
+                  :value="location"
+                  >{{ location }}</md-option
+                >
+              </md-select>
+            </md-field>
+          </div>
+          <div class="md-layout-item md-small-size-100 md-size-100">
+            <md-field>
+              <label for="micro-locations">Micro Locations</label>
+              <md-select
+                v-model="selectedMicroLocations"
+                name="micro-locations"
+                id="micro-locations"
+                multiple
+              >
+                <md-option
+                  v-for="location in locations.microLocations"
+                  :key="location"
+                  :value="location"
+                  >{{ location }}</md-option
+                >
+              </md-select>
+            </md-field>
+          </div>
+          <div class="md-layout-item md-small-size-100 md-size-100">
+            <md-field>
               <label>Cena</label>
               <md-input v-model="input.email" type="text"></md-input>
             </md-field>
@@ -45,8 +81,21 @@ export default {
       default: "",
     },
   },
+  mounted() {
+    axios
+      .get("http://localhost:9090/get-locations")
+      .then((res) => {
+        this.locations = res.data;
+      })
+      .catch((error) => {
+        this.notifyVue("top", "center", error.response.data);
+      });
+  },
   data() {
     return {
+      selectedLocations: [],
+      selectedMicroLocations: [],
+      locations: [],
       coordinates: null,
       input: {
         email: null,
@@ -57,8 +106,21 @@ export default {
   methods: {
     filter() {
       console.log(this.coordinates);
+      console.log(this.selectedLocations);
+      console.log(this.selectedMicroLocations);
     },
   },
 };
 </script>
-<style></style>
+
+
+<style>
+.md-ripple > span {
+  padding: 15px 0 0 50px;
+}
+
+.md-menu-content.md-select-menu {
+  z-index: 2000 !important;
+}
+
+</style>

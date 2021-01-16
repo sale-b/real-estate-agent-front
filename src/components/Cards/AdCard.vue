@@ -1,14 +1,17 @@
 <template>
-  <stats-card data-background-color="green">
+  <stats-card>
     <template slot="header">
-      <img class="ad-pic" :src="imgUrl" alt="Apartment img" />
+      <img
+        class="ad-pic"
+        :src="
+          imgUrl != null ? imgUrl : require('@/assets/img/no-image-found.png')
+        "
+        alt="Apartment img"
+      />
     </template>
 
     <template slot="content">
-      <h4
-        v-on:click.prevent="$router.push('/ad/' + id).catch((err) => {})"
-        class="category"
-      >
+      <h4 class="category" style="font-weight: bold;">
         {{ tittle }}
       </h4>
       <br />
@@ -55,6 +58,11 @@ import StatsCard from "./StatsCard";
 export default {
   components: {
     StatsCard,
+  },
+  methods: {
+    openDetails(id) {
+         this.$router.push('/ad/' + id).catch((err) => {})
+    },
   },
   props: [
     "id",
@@ -114,10 +122,5 @@ img.ad-pic {
   width: 120px;
   height: 120px;
   object-fit: cover;
-}
-
-h4:hover {
-  color: rgb(24, 42, 204) !important;
-  cursor: pointer;
 }
 </style>
