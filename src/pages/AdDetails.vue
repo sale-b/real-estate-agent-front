@@ -86,7 +86,7 @@ images(){
 }
   },
   mounted() {
-     this.getData(this.infoPagination);
+     this.fetchData(this.infoPagination);
   },
   methods: {
     isBlock(index) {
@@ -120,7 +120,7 @@ images(){
       slides[this.slideIndex - 1].style.display = "block";
       dots[this.slideIndex - 1].className += " active";
     },
-        getData(page) {
+        fetchData(page) {
       axios
         .get("http://localhost:9090/ad/" + page)
         .then((res) => {

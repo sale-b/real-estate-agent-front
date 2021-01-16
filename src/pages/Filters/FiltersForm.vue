@@ -3,7 +3,7 @@
     <md-card>
       <h3 style="text-align: center">Filters</h3>
 
-      <dialog-map v-on:coordinates="coordinates = $event"></dialog-map>
+      <dialog-map v-on:coordinates="filter.coordinates = $event"></dialog-map>
 
       <md-card-content>
         <div class="md-layout">
@@ -11,7 +11,7 @@
             <md-field>
               <label for="locations">Locations</label>
               <md-select
-                v-model="selectedLocations"
+                v-model="filter.selectedLocations"
                 name="locations"
                 id="locations"
                 multiple
@@ -29,7 +29,7 @@
             <md-field>
               <label for="micro-locations">Micro Locations</label>
               <md-select
-                v-model="selectedMicroLocations"
+                v-model="filter.selectedMicroLocations"
                 name="micro-locations"
                 id="micro-locations"
                 multiple
@@ -46,17 +46,17 @@
           <div class="md-layout-item md-small-size-100 md-size-100">
             <md-field>
               <label>Cena</label>
-              <md-input v-model="input.email" type="text"></md-input>
+              <md-input v-model="filter.input.email" type="text"></md-input>
             </md-field>
           </div>
           <div class="md-layout-item md-small-size-100 md-size-100">
             <md-field>
               <label>Kvadratura</label>
-              <md-input v-model="input.password" type="text"></md-input>
+              <md-input v-model="filter.input.password" type="text"></md-input>
             </md-field>
           </div>
           <div class="md-layout-item md-size-100 text-right">
-            <md-button class="md-raised md-success" @click="filter"
+            <md-button class="md-raised md-success" @click="filtering"
               >Filter</md-button
             >
           </div>
@@ -69,6 +69,8 @@
 import axios from "axios";
 import { mapActions } from "vuex";
 import DialogMap from "./DialogMap.vue";
+import EventBus from "../../event-bus";
+import Vue from "vue";
 
 export default {
   components: {
@@ -93,21 +95,24 @@ export default {
   },
   data() {
     return {
-      selectedLocations: [],
-      selectedMicroLocations: [],
       locations: [],
-      coordinates: null,
-      input: {
-        email: null,
-        password: null,
+      filter: {
+        selectedLocations: [],
+        selectedMicroLocations: [],
+        coordinates: null,
+        input: {
+          email: null,
+          password: null,
+        },
       },
     };
   },
   methods: {
-    filter() {
-      console.log(this.coordinates);
-      console.log(this.selectedLocations);
-      console.log(this.selectedMicroLocations);
+    filtering() {
+      console.log(this.filter.coordinates);
+      console.log(this.filter.selectedLocations);
+      console.log(this.filter.selectedMicroLocations);
+      EventBus.$emit('filterApplied', this.filter);
     },
   },
 };
@@ -122,5 +127,4 @@ export default {
 .md-menu-content.md-select-menu {
   z-index: 2000 !important;
 }
-
 </style>

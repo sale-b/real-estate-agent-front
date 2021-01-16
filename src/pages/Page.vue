@@ -17,7 +17,7 @@
           :furniture="ad.furniture"
           :id="ad.id"
           @click.native="openDetails(ad.id)"
-           ref="adDetails"
+          ref="adDetails"
         ></ad-card>
       </div>
     </div>
@@ -37,6 +37,9 @@
 import Pagination from "./../components/Pagination";
 import AdCard from "../components/Cards/AdCard.vue";
 import axios from "axios";
+import Vue from "vue";
+import EventBus from "./../event-bus";
+
 
 export default {
   components: {
@@ -45,7 +48,7 @@ export default {
   },
   watch: {
     $route(to, from) {
-      this.getData(to.params.id);
+      this.fetchData(to.params.id, null);
     },
   },
   data() {
@@ -56,11 +59,17 @@ export default {
     };
   },
   mounted() {
-    this.getData(this.infoPagination);
+    this.fetchData(this.infoPagination, null);
+    EventBus.$on("filterApplied", (filter) => {
+       this.fetchData(this.infoPagination, 
+       {
+         microLocation: filter.selectedMicroLocations
+         });
+    });
   },
   methods: {
     openDetails(id) {
-     this.$refs.adDetails[id-1].openDetails(id);
+      this.$refs.adDetails[id - 1].openDetails(id);
     },
     getFormattedDate(string) {
       var date = new Date(string);
@@ -85,10 +94,10 @@ export default {
     change(page) {
       this.$router.push(this.infoPagination.toString()).catch((err) => {});
     },
-    getData(page) {
+    fetchData(page, filters) {
       axios
         .post("http://localhost:9090/page", {
-          filters: null,
+          filters: filters,
           page: page,
         })
         .then((res) => {
