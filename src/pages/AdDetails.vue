@@ -5,14 +5,14 @@
         class="md-layout-item  md-xsmall-size-100 md-small-size-100 md-medium-size-50 md-size-50"
       >
 
-        <div v-if="(ad != null) && (ad.pictures.length > 0)" class="gallery">
+        <div class="gallery">
           <div
-            v-for="(image, index) in ad.pictures"
+            v-for="(image, index) in images"
             :key="index"
             class="mySlides"
             v-bind:style="isBlock(index+1)"
           >
-            <div class="numbertext">{{ index+1 }} / {{ ad.pictures.length }}</div>
+            <div class="numbertext">{{ index+1 }} / {{ images.length }}</div>
             <img :src="image" style="width: 100%" />
           </div>
 
@@ -21,7 +21,7 @@
 
           <div class="row">
             <div
-              v-for="(image, index) in ad.pictures"
+              v-for="(image, index) in images"
               :key="index"
               class="column"
             >
@@ -75,6 +75,15 @@ export default {
       ad: null,
       infoPagination: parseInt(this.$route.params.id),
     };
+  },
+  computed: {
+images(){
+  if(this.ad.pictures.length > 0){
+    return this.ad.pictures;
+  } else {
+    return [require('@/assets/img/no-image-found.png')];
+  }
+}
   },
   created() {
      this.getData(this.infoPagination);

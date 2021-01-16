@@ -16,7 +16,7 @@
           :rooms="ad.rooms_number"
           :furniture="ad.furniture"
           :id="ad.id"
-          @click.native="openDtails(ad.id)"
+          @click.native="openDetails(ad.id)"
            ref="childComponent"
         ></ad-card>
       </div>
