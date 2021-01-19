@@ -224,22 +224,55 @@ export default {
       default: "",
     },
   },
+  computed: {
+    selectedLocations() {
+      return this.filter.selectedLocations;
+    },
+  },
   watch: {
     $route(to, from) {
-      this.filter.selectedLocations = this.setArray(this.$route.query.locations);
-      this.filter.selectedMicroLocations = this.setArray(this.$route.query.microLocations);
+      this.filter.selectedLocations = this.setArray(
+        this.$route.query.locations
+      );
+      this.filter.selectedMicroLocations = this.setArray(
+        this.$route.query.microLocations
+      );
       this.filter.selectedMaxPrice = this.setNum(this.$route.query.priceLes);
       this.filter.selectedMinPrice = this.setNum(this.$route.query.priceHigher);
       this.filter.selectedMaxArea = this.setNum(this.$route.query.spaceAreaLes);
-      this.filter.selectedMinArea = this.setNum(this.$route.query.spaceAreaHigher);
-      this.filter.selectedMaxRooms = this.setNum(this.$route.query.roomsNumberLes);
-      this.filter.selectedMinRooms = this.setNum(this.$route.query.roomsNumberHigher);
+      this.filter.selectedMinArea = this.setNum(
+        this.$route.query.spaceAreaHigher
+      );
+      this.filter.selectedMaxRooms = this.setNum(
+        this.$route.query.roomsNumberLes
+      );
+      this.filter.selectedMinRooms = this.setNum(
+        this.$route.query.roomsNumberHigher
+      );
       this.filter.adType = this.setArray(this.$route.query.adType);
       this.filter.realEstateType = this.setArray(this.$route.query.type);
       this.filter.heatingType = this.setArray(this.$route.query.heatingType);
       this.filter.floors = this.setArray(this.$route.query.floor);
       this.filter.furniture = this.setArray(this.$route.query.furniture);
       this.filter.pictures = Boolean(this.$route.query.hasPictures);
+    },
+    selectedLocations: function (val, oldVal) {
+      if (oldVal != null) {
+        this.microLocations = null;
+        axios
+          .post("http://localhost:9090/refresh-micro-locations", {
+            locations: val,
+          })
+          .then((res) => {
+            this.microLocations = res.data.microLocations;
+            this.filter.selectedMicroLocations = this.filter.selectedMicroLocations.filter(
+              (el) => this.microLocations.includes(el)
+            );
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     },
   },
   mounted() {
@@ -297,26 +330,31 @@ export default {
       return null;
     },
     filtering() {
-      this.$router.push({
-        name: "All Ads",
-        params: { id: 1 },
-        query: {
-          locations: this.filter.selectedLocations,
-          microLocations: this.filter.selectedMicroLocations,
-          priceLes: this.filter.selectedMaxPrice,
-          priceHigher: this.filter.selectedMinPrice,
-          spaceAreaLes: this.filter.selectedMaxArea,
-          spaceAreaHigher: this.filter.selectedMinArea,
-          roomsNumberLes: this.filter.selectedMaxRooms,
-          roomsNumberHigher: this.filter.selectedMinRooms,
-          adType: this.filter.adType,
-          type: this.filter.realEstateType,
-          heatingType: this.filter.heatingType,
-          floor: this.filter.floors,
-          furniture: this.filter.furniture,
-          hasPictures: this.filter.pictures,
-        },
-      }).catch((err) => {});
+      this.$router
+        .push({
+          name: "All Ads",
+          params: { id: 1 },
+          query: Object.fromEntries(
+            Object.entries({
+              locations: this.filter.selectedLocations,
+              microLocations: this.filter.selectedMicroLocations,
+              priceLes: this.filter.selectedMaxPrice,
+              priceHigher: this.filter.selectedMinPrice,
+              spaceAreaLes: this.filter.selectedMaxArea,
+              spaceAreaHigher: this.filter.selectedMinArea,
+              roomsNumberLes: this.filter.selectedMaxRooms,
+              roomsNumberHigher: this.filter.selectedMinRooms,
+              adType: this.filter.adType,
+              type: this.filter.realEstateType,
+              heatingType: this.filter.heatingType,
+              floor: this.filter.floors,
+              furniture: this.filter.furniture,
+              hasPictures: this.filter.pictures,
+            }).filter(([_, v]) => v != null)
+          ),
+        })
+        .catch((err) => {});
+        this.$sidebar.displaySidebar(!this.$sidebar.showSidebar);
     },
   },
 };

@@ -4,21 +4,25 @@
       <div
         class="md-layout-item md-medium-size-100 md-xsmall-size-100 md-size-100"
       >
-        <ad-card
+        <a
           v-for="(ad, index) in ads"
           :key="index"
-          :tittle="ad.tittle"
-          :content="ad.description"
-          :img-url="ad.img_url"
-          :date="getFormattedDate(ad.created_on)"
-          :phone="ad.phone"
-          :space="ad.living_space_area"
-          :rooms="ad.rooms_number"
-          :furniture="ad.furniture"
-          :id="ad.id"
-          @click.native="openDetails(index, ad.id)"
-          ref="adDetails"
-        ></ad-card>
+          :href="generateUrl(ad.id)"
+          v-on:click.prevent="$refs.adDetails[index].openDetails(ad.id)"
+        >
+          <ad-card
+            :tittle="ad.tittle"
+            :content="ad.description"
+            :img-url="ad.img_url"
+            :date="getFormattedDate(ad.created_on)"
+            :phone="ad.phone"
+            :space="ad.living_space_area"
+            :rooms="ad.rooms_number"
+            :furniture="ad.furniture"
+            :id="ad.id"
+            ref="adDetails"
+          ></ad-card>
+        </a>
       </div>
     </div>
     <div class="pagination-holder">
@@ -82,7 +86,7 @@ export default {
         heatingType: this.set(this.$route.query.heatingType),
         floor: this.set(this.$route.query.floor),
         furniture: this.set(this.$route.query.furniture),
-        hasPictures: this.$route.query.hasPictures
+        hasPictures: this.$route.query.hasPictures,
       },
       infoPagination: parseInt(this.$route.params.id),
       pageCount: 1,
@@ -90,25 +94,6 @@ export default {
   },
   mounted() {
     this.fetchData(this.infoPagination, this.infoFilters);
-    // EventBus.$on("filterApplied", (filter) => {
-    //   this.infoFilters = filter;
-    //   this.fetchData(this.infoPagination, {
-    //     location: filter.selectedLocations,
-    //     microLocation: filter.selectedMicroLocations,
-    //     priceLes: parseFloat(filter.selectedMaxPrice),
-    //     priceHigher: parseFloat(filter.selectedMinPrice),
-    //     spaceAreaLes: parseFloat(filter.selectedMaxArea),
-    //     spaceAreaHigher: parseFloat(filter.selectedMinArea),
-    //     roomsNumberLes: parseFloat(filter.selectedMaxRooms),
-    //     roomsNumberHigher: parseFloat(filter.selectedMinRooms),
-    //     type: filter.realEstateType,
-    //     adType: filter.adType,
-    //     heatingType: filter.heatingType,
-    //     floor: filter.floors,
-    //     furniture: filter.furniture,
-    //     hasPictures: filter.pictures
-    //   });
-    // });
   },
   methods: {
     set(value) {
@@ -118,6 +103,9 @@ export default {
     },
     openDetails(index, id) {
       this.$refs.adDetails[index].openDetails(id);
+    },
+    generateUrl(id) {
+      return "/ad/" + id.toString();
     },
     getFormattedDate(string) {
       var date = new Date(string);
@@ -140,7 +128,9 @@ export default {
       });
     },
     change(page) {
-      this.$router.push(this.infoPagination.toString()).catch((err) => {});
+      this.$router.push({ name: "All Ads", 
+      params: {id: this.infoPagination.toString()},
+      query: this.$route.query}).catch((err) => {});
     },
     fetchData(page, filters) {
       axios
