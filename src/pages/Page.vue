@@ -5,8 +5,8 @@
         class="md-layout-item md-medium-size-100 md-xsmall-size-100 md-size-100"
       >
         <ad-card
-          v-for="ad in ads"
-          :key="ad.id"
+          v-for="(ad, index) in ads"
+          :key="index"
           :tittle="ad.tittle"
           :content="ad.description"
           :img-url="ad.img_url"
@@ -16,7 +16,7 @@
           :rooms="ad.rooms_number"
           :furniture="ad.furniture"
           :id="ad.id"
-          @click.native="openDetails(ad.id)"
+          @click.native="openDetails(index, ad.id)"
           ref="adDetails"
         ></ad-card>
       </div>
@@ -40,7 +40,6 @@ import axios from "axios";
 import Vue from "vue";
 import EventBus from "./../event-bus";
 
-
 export default {
   components: {
     Pagination,
@@ -48,28 +47,77 @@ export default {
   },
   watch: {
     $route(to, from) {
-      this.fetchData(to.params.id, null);
+      this.fetchData(parseInt(to.params.id), {
+        location: this.set(this.$route.query.locations),
+        microLocation: this.set(this.$route.query.microLocations),
+        priceLes: parseFloat(this.$route.query.priceLes),
+        priceHigher: parseFloat(this.$route.query.priceHigher),
+        spaceAreaLes: parseFloat(this.$route.query.spaceAreaLes),
+        spaceAreaHigher: parseFloat(this.$route.query.spaceAreaHigher),
+        roomsNumberLes: parseFloat(this.$route.query.roomsNumberLes),
+        roomsNumberHigher: parseFloat(this.$route.query.roomsNumberHigher),
+        type: this.set(this.$route.query.type),
+        adType: this.set(this.$route.query.adType),
+        heatingType: this.set(this.$route.query.heatingType),
+        floor: this.set(this.$route.query.floor),
+        furniture: this.set(this.$route.query.furniture),
+        hasPictures: this.$route.query.hasPictures,
+      });
     },
   },
   data() {
     return {
       ads: null,
+      infoFilters: {
+        location: this.set(this.$route.query.locations),
+        microLocation: this.set(this.$route.query.microLocations),
+        priceLes: parseFloat(this.$route.query.priceLes),
+        priceHigher: parseFloat(this.$route.query.priceHigher),
+        spaceAreaLes: parseFloat(this.$route.query.spaceAreaLes),
+        spaceAreaHigher: parseFloat(this.$route.query.spaceAreaHigher),
+        roomsNumberLes: parseFloat(this.$route.query.roomsNumberLes),
+        roomsNumberHigher: parseFloat(this.$route.query.roomsNumberHigher),
+        type: this.set(this.$route.query.type),
+        adType: this.set(this.$route.query.adType),
+        heatingType: this.set(this.$route.query.heatingType),
+        floor: this.set(this.$route.query.floor),
+        furniture: this.set(this.$route.query.furniture),
+        hasPictures: this.$route.query.hasPictures
+      },
       infoPagination: parseInt(this.$route.params.id),
       pageCount: 1,
     };
   },
   mounted() {
-    this.fetchData(this.infoPagination, null);
-    EventBus.$on("filterApplied", (filter) => {
-       this.fetchData(this.infoPagination, 
-       {
-         microLocation: filter.selectedMicroLocations
-         });
-    });
+    this.fetchData(this.infoPagination, this.infoFilters);
+    // EventBus.$on("filterApplied", (filter) => {
+    //   this.infoFilters = filter;
+    //   this.fetchData(this.infoPagination, {
+    //     location: filter.selectedLocations,
+    //     microLocation: filter.selectedMicroLocations,
+    //     priceLes: parseFloat(filter.selectedMaxPrice),
+    //     priceHigher: parseFloat(filter.selectedMinPrice),
+    //     spaceAreaLes: parseFloat(filter.selectedMaxArea),
+    //     spaceAreaHigher: parseFloat(filter.selectedMinArea),
+    //     roomsNumberLes: parseFloat(filter.selectedMaxRooms),
+    //     roomsNumberHigher: parseFloat(filter.selectedMinRooms),
+    //     type: filter.realEstateType,
+    //     adType: filter.adType,
+    //     heatingType: filter.heatingType,
+    //     floor: filter.floors,
+    //     furniture: filter.furniture,
+    //     hasPictures: filter.pictures
+    //   });
+    // });
   },
   methods: {
-    openDetails(id) {
-      this.$refs.adDetails[id - 1].openDetails(id);
+    set(value) {
+      if (Array.isArray(value)) return value;
+      if (value != null) return [value];
+      return null;
+    },
+    openDetails(index, id) {
+      this.$refs.adDetails[index].openDetails(id);
     },
     getFormattedDate(string) {
       var date = new Date(string);

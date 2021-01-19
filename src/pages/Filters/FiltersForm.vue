@@ -1,9 +1,9 @@
 <template>
   <form>
-    <md-card>
+    <md-card style="overflow: hidden">
       <h3 style="text-align: center">Filters</h3>
 
-      <dialog-map v-on:coordinates="filter.coordinates = $event"></dialog-map>
+      <!-- <dialog-map v-on:coordinates="filter.coordinates = $event"></dialog-map> -->
 
       <md-card-content>
         <div class="md-layout">
@@ -17,7 +17,7 @@
                 multiple
               >
                 <md-option
-                  v-for="location in locations.locations"
+                  v-for="location in locations"
                   :key="location"
                   :value="location"
                   >{{ location }}</md-option
@@ -27,7 +27,7 @@
           </div>
           <div class="md-layout-item md-small-size-100 md-size-100">
             <md-field>
-              <label for="micro-locations">Micro Locations</label>
+              <label for="micro-locations">Micro locations</label>
               <md-select
                 v-model="filter.selectedMicroLocations"
                 name="micro-locations"
@@ -35,7 +35,7 @@
                 multiple
               >
                 <md-option
-                  v-for="location in locations.microLocations"
+                  v-for="location in microLocations"
                   :key="location"
                   :value="location"
                   >{{ location }}</md-option
@@ -43,18 +43,159 @@
               </md-select>
             </md-field>
           </div>
-          <div class="md-layout-item md-small-size-100 md-size-100">
+          <div class="md-layout-item md-small-size-50 md-size-50">
             <md-field>
-              <label>Cena</label>
-              <md-input v-model="filter.input.email" type="text"></md-input>
+              <label>Min price &euro;</label>
+              <md-input
+                v-model="filter.selectedMinPrice"
+                type="text"
+                style="height: 60px; padding: 30px 0 0 0"
+              ></md-input>
+            </md-field>
+          </div>
+          <div class="md-layout-item md-small-size-50 md-size-50">
+            <md-field>
+              <label>Max price&euro;</label>
+              <md-input
+                v-model="filter.selectedMaxPrice"
+                type="text"
+                style="height: 60px; padding: 30px 0 0 0"
+              ></md-input>
+            </md-field>
+          </div>
+          <div class="md-layout-item md-small-size-50 md-size-50">
+            <md-field>
+              <label>Min &zwnj; area m<sup>2</sup></label>
+              <md-input
+                v-model="filter.selectedMinArea"
+                type="text"
+                style="height: 60px; padding: 30px 0 0 0"
+              ></md-input>
+            </md-field>
+          </div>
+          <div class="md-layout-item md-small-size-50 md-size-50">
+            <md-field>
+              <label>Max area m<sup>2</sup></label>
+              <md-input
+                v-model="filter.selectedMaxArea"
+                type="text"
+                style="height: 60px; padding: 30px 0 0 0"
+              ></md-input>
+            </md-field>
+          </div>
+          <div class="md-layout-item md-small-size-50 md-size-50">
+            <md-field>
+              <label>Min rooms</label>
+              <md-input
+                v-model="filter.selectedMinRooms"
+                type="text"
+                style="height: 60px; padding: 30px 0 0 0"
+              ></md-input>
+            </md-field>
+          </div>
+          <div class="md-layout-item md-small-size-50 md-size-50">
+            <md-field>
+              <label>Max rooms</label>
+              <md-input
+                v-model="filter.selectedMaxRooms"
+                type="text"
+                style="height: 60px; padding: 30px 0 0 0"
+              ></md-input>
             </md-field>
           </div>
           <div class="md-layout-item md-small-size-100 md-size-100">
             <md-field>
-              <label>Kvadratura</label>
-              <md-input v-model="filter.input.password" type="text"></md-input>
+              <label for="ad-types">Ad type</label>
+              <md-select
+                v-model="filter.adType"
+                name="ad-types"
+                id="ad-types"
+                multiple
+              >
+                <md-option
+                  v-for="adType in adTypes"
+                  :key="adType"
+                  :value="adType"
+                  >{{ adType }}</md-option
+                >
+              </md-select>
             </md-field>
           </div>
+          <div class="md-layout-item md-small-size-100 md-size-100">
+            <md-field>
+              <label for="real-estate-types">Real estate type</label>
+              <md-select
+                v-model="filter.realEstateType"
+                name="real-estate-types"
+                id="real-estate-types"
+                multiple
+              >
+                <md-option
+                  v-for="realEstateType in realEstateTypes"
+                  :key="realEstateType"
+                  :value="realEstateType"
+                  >{{ realEstateType }}</md-option
+                >
+              </md-select>
+            </md-field>
+          </div>
+          <div class="md-layout-item md-small-size-100 md-size-100">
+            <md-field>
+              <label for="heating-types">Heating type</label>
+              <md-select
+                v-model="filter.heatingType"
+                name="heating-types"
+                id="heating-types"
+                multiple
+              >
+                <md-option
+                  v-for="heatingType in heatingTypes"
+                  :key="heatingType"
+                  :value="heatingType"
+                  >{{ heatingType }}</md-option
+                >
+              </md-select>
+            </md-field>
+          </div>
+          <div class="md-layout-item md-small-size-100 md-size-100">
+            <md-field>
+              <label for="floors">Floors</label>
+              <md-select
+                v-model="filter.floors"
+                name="floors"
+                id="floors"
+                multiple
+              >
+                <md-option
+                  v-for="floor in floors"
+                  :key="floor"
+                  :value="floor"
+                  >{{ floor }}</md-option
+                >
+              </md-select>
+            </md-field>
+          </div>
+          <div class="md-layout-item md-small-size-100 md-size-100">
+            <md-field>
+              <label for="furniture">Furniture</label>
+              <md-select
+                v-model="filter.furniture"
+                name="furniture"
+                id="furniture"
+                multiple
+              >
+                <md-option
+                  v-for="furniture in furnitures"
+                  :key="furniture"
+                  :value="furniture"
+                  >{{ furniture }}</md-option
+                >
+              </md-select>
+            </md-field>
+          </div>
+          <md-switch class="md-primary" v-model="filter.pictures"
+            >Only with photos</md-switch
+          >
           <div class="md-layout-item md-size-100 text-right">
             <md-button class="md-raised md-success" @click="filtering"
               >Filter</md-button
@@ -68,13 +209,13 @@
 <script>
 import axios from "axios";
 import { mapActions } from "vuex";
-import DialogMap from "./DialogMap.vue";
+// import DialogMap from "./DialogMap.vue";
 import EventBus from "../../event-bus";
 import Vue from "vue";
 
 export default {
   components: {
-    DialogMap,
+    // DialogMap,
   },
   name: "login-form",
   props: {
@@ -83,11 +224,35 @@ export default {
       default: "",
     },
   },
+  watch: {
+    $route(to, from) {
+      this.filter.selectedLocations = this.setArray(this.$route.query.locations);
+      this.filter.selectedMicroLocations = this.setArray(this.$route.query.microLocations);
+      this.filter.selectedMaxPrice = this.setNum(this.$route.query.priceLes);
+      this.filter.selectedMinPrice = this.setNum(this.$route.query.priceHigher);
+      this.filter.selectedMaxArea = this.setNum(this.$route.query.spaceAreaLes);
+      this.filter.selectedMinArea = this.setNum(this.$route.query.spaceAreaHigher);
+      this.filter.selectedMaxRooms = this.setNum(this.$route.query.roomsNumberLes);
+      this.filter.selectedMinRooms = this.setNum(this.$route.query.roomsNumberHigher);
+      this.filter.adType = this.setArray(this.$route.query.adType);
+      this.filter.realEstateType = this.setArray(this.$route.query.type);
+      this.filter.heatingType = this.setArray(this.$route.query.heatingType);
+      this.filter.floors = this.setArray(this.$route.query.floor);
+      this.filter.furniture = this.setArray(this.$route.query.furniture);
+      this.filter.pictures = Boolean(this.$route.query.hasPictures);
+    },
+  },
   mounted() {
     axios
-      .get("http://localhost:9090/get-locations")
+      .get("http://localhost:9090/get-form-props")
       .then((res) => {
-        this.locations = res.data;
+        this.locations = res.data.locations;
+        this.microLocations = res.data.microLocations;
+        this.adTypes = res.data.adTypes;
+        this.realEstateTypes = res.data.realEstateTypes;
+        this.heatingTypes = res.data.heatingTypes;
+        this.floors = res.data.floors;
+        this.furnitures = res.data.furnitureTypes;
       })
       .catch((error) => {
         this.notifyVue("top", "center", error.response.data);
@@ -96,23 +261,62 @@ export default {
   data() {
     return {
       locations: [],
+      microLocations: [],
+      adTypes: [],
+      realEstateTypes: [],
+      heatingTypes: [],
+      floors: [],
+      furnitures: [],
       filter: {
-        selectedLocations: [],
-        selectedMicroLocations: [],
-        coordinates: null,
-        input: {
-          email: null,
-          password: null,
-        },
+        selectedLocations: this.setArray(this.$route.query.locations),
+        selectedMicroLocations: this.setArray(this.$route.query.microLocations),
+        selectedMaxPrice: this.setNum(this.$route.query.priceLes),
+        selectedMinPrice: this.setNum(this.$route.query.priceHigher),
+        selectedMaxArea: this.setNum(this.$route.query.spaceAreaLes),
+        selectedMinArea: this.setNum(this.$route.query.spaceAreaHigher),
+        selectedMaxRooms: this.setNum(this.$route.query.roomsNumberLes),
+        selectedMinRooms: this.setNum(this.$route.query.roomsNumberHigher),
+        adType: this.setArray(this.$route.query.adType),
+        realEstateType: this.setArray(this.$route.query.type),
+        heatingType: this.setArray(this.$route.query.heatingType),
+        floors: this.setArray(this.$route.query.floor),
+        furniture: this.setArray(this.$route.query.furniture),
+        // coordinates: null,
+        pictures: Boolean(this.$route.query.hasPictures),
       },
     };
   },
   methods: {
+    setArray(value) {
+      if (Array.isArray(value)) return value;
+      if (value != null) return [value];
+      return null;
+    },
+    setNum(value) {
+      if (!isNaN(parseFloat(value))) return parseFloat(value);
+      return null;
+    },
     filtering() {
-      console.log(this.filter.coordinates);
-      console.log(this.filter.selectedLocations);
-      console.log(this.filter.selectedMicroLocations);
-      EventBus.$emit('filterApplied', this.filter);
+      this.$router.push({
+        name: "All Ads",
+        params: { id: 1 },
+        query: {
+          locations: this.filter.selectedLocations,
+          microLocations: this.filter.selectedMicroLocations,
+          priceLes: this.filter.selectedMaxPrice,
+          priceHigher: this.filter.selectedMinPrice,
+          spaceAreaLes: this.filter.selectedMaxArea,
+          spaceAreaHigher: this.filter.selectedMinArea,
+          roomsNumberLes: this.filter.selectedMaxRooms,
+          roomsNumberHigher: this.filter.selectedMinRooms,
+          adType: this.filter.adType,
+          type: this.filter.realEstateType,
+          heatingType: this.filter.heatingType,
+          floor: this.filter.floors,
+          furniture: this.filter.furniture,
+          hasPictures: this.filter.pictures,
+        },
+      }).catch((err) => {});
     },
   },
 };
