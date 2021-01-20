@@ -19,6 +19,7 @@
             :space="ad.living_space_area"
             :rooms="ad.rooms_number"
             :furniture="ad.furniture"
+            :price="ad.price"
             :id="ad.id"
             ref="adDetails"
           ></ad-card>

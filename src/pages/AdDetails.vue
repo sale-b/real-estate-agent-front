@@ -54,7 +54,7 @@
     </md-card>
 
         <div style="width: 100%; height: 300px; border: 3px solid #73AD21;">
-            <map-container-pin :geolocation="JSON.parse('[' + ad.geolocation + ']')"></map-container-pin>
+            <map-container-pin :geolocation="JSON.parse('[' + ad.geolocation.split( ',' ).reverse().join(',') + ']')"></map-container-pin>
           </div>
       </div>
     </div>
