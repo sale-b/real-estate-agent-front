@@ -2,17 +2,16 @@
   <div class="content">
     <div v-if="ad != null" class="md-layout">
       <div
-        class="md-layout-item  md-xsmall-size-100 md-small-size-100 md-medium-size-50 md-size-50"
+        class="md-layout-item md-xsmall-size-100 md-small-size-100 md-medium-size-50 md-size-50"
       >
-
         <div class="gallery">
           <div
             v-for="(image, index) in images"
             :key="index"
             class="mySlides"
-            v-bind:style="isBlock(index+1)"
+            v-bind:style="isBlock(index + 1)"
           >
-            <div class="numbertext">{{ index+1 }} / {{ images.length }}</div>
+            <div class="numbertext">{{ index + 1 }} / {{ images.length }}</div>
             <img :src="image" style="width: 100%" />
           </div>
 
@@ -20,18 +19,16 @@
           <a class="next" @click="plusSlides(1)">❯</a>
 
           <div class="row">
-            <div
-              v-for="(image, index) in images"
-              :key="index"
-              class="column"
-            >
+            <div v-for="(image, index) in images" :key="index" class="column">
               <img
                 :class="
-                  'demo' + (isActive(index+1) == true ? ' active' : '') + ' cursor'
+                  'demo' +
+                  (isActive(index + 1) == true ? ' active' : '') +
+                  ' cursor'
                 "
                 :src="image"
                 style="width: 100%"
-                @click="currentSlide(index+1)"
+                @click="currentSlide(index + 1)"
                 alt="Apartment img"
               />
             </div>
@@ -39,23 +36,21 @@
         </div>
       </div>
       <div
-        class="md-layout-item  md-xsmall-size-100 md-small-size-100 md-medium-size-50 md-size-50"
+        class="md-layout-item md-xsmall-size-100 md-small-size-100 md-medium-size-50 md-size-50"
       >
-      <md-card>
-      <md-card-header data-background-color="green">
-        <div class="md-title">{{ad.tittle}}</div>
-      </md-card-header>
+        <md-card>
+          <md-card-header data-background-color="green">
+            <div class="md-title">{{ ad.tittle }}</div>
+          </md-card-header>
 
-      <md-card-content>
-        {{ad.description}}
-      </md-card-content>
+          <md-card-content>
+            {{ ad.description }}
+          </md-card-content>
+        </md-card>
 
-    
-    </md-card>
-
-        <div style="width: 100%; height: 300px; border: 3px solid #73AD21;">
-            <map-container-pin :geolocation="JSON.parse('[' + ad.geolocation.split( ',' ).reverse().join(',') + ']')"></map-container-pin>
-          </div>
+        <div style="width: 100%; height: 300px; border: 3px solid #73ad21">
+          <map-container-pin :geolocation="getCoordinates()"></map-container-pin>
+        </div>
       </div>
     </div>
   </div>
@@ -77,18 +72,28 @@ export default {
     };
   },
   computed: {
-images(){
-  if(this.ad.pictures.length > 0){
-    return this.ad.pictures;
-  } else {
-    return [require('@/assets/img/no-image-found.png')];
-  }
-}
+    images() {
+      if (this.ad.pictures.length > 0) {
+        return this.ad.pictures;
+      } else {
+        return [require("@/assets/img/no-image-found.png")];
+      }
+    },
   },
   mounted() {
-     this.fetchData(this.infoPagination);
+    this.fetchData(this.infoPagination);
   },
   methods: {
+    getCoordinates() {
+      let xy = this.ad.geolocation.split(",");
+      if (xy[0] > xy[1])
+      {return JSON.parse(
+        "[" + this.ad.geolocation.split(",").reverse().join(",") + "]"
+      );} else {
+        return JSON.parse(
+        "[" + this.ad.geolocation + "]" );
+      }
+    },
     isBlock(index) {
       if (index == this.slideIndex) return "display: block;";
     },
@@ -120,7 +125,7 @@ images(){
       slides[this.slideIndex - 1].style.display = "block";
       dots[this.slideIndex - 1].className += " active";
     },
-        fetchData(page) {
+    fetchData(page) {
       axios
         .get("http://localhost:9090/ad/" + page)
         .then((res) => {
@@ -135,8 +140,8 @@ images(){
 </script>
 
 <style scoped>
-.md-card-header{
-padding: 0;
+.md-card-header {
+  padding: 0;
 }
 body {
   font-family: Arial;

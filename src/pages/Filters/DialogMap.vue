@@ -38,14 +38,14 @@ export default {
     },
     read() {
       this.$refs.map.read();
-      this.$sidebar.displaySidebar(!this.$sidebar.showSidebar);
+      this.$sidebar.displaySidebar(true);
     },
     undo() {
       this.$refs.map.undo();
     },
     openDialog() {
       this.showDialog = true;
-      this.$sidebar.displaySidebar(!this.$sidebar.showSidebar);
+      this.$sidebar.displaySidebar(false);
     },
   },
   data: () => ({

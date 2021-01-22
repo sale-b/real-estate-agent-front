@@ -3,7 +3,10 @@
     <md-card style="overflow: hidden">
       <h3 style="text-align: center">Filters</h3>
 
-      <!-- <dialog-map v-on:coordinates="filter.coordinates = $event"></dialog-map> -->
+      <dialog-map
+        v-show="userId"
+        v-on:coordinates="filter.coordinates = $event"
+      ></dialog-map>
 
       <md-card-content>
         <div class="md-layout">
@@ -196,10 +199,35 @@
           <md-switch class="md-primary" v-model="filter.pictures"
             >Only with photos</md-switch
           >
-          <div class="md-layout-item md-size-100 text-right">
+
+          <div class="md-layout-item md-size-33 text-left">
+            <span>
+              <md-button
+                class="md-icon-button md-raised md-danger"
+                @click="clearFilters"
+                style="height: 41px; font-size: 20px"
+              >
+                X
+              </md-button>
+              <md-tooltip md-delay="1000">Clear all filters</md-tooltip>
+            </span>
+          </div>
+
+          <div class="md-layout-item md-size-33 text-left">
             <md-button class="md-raised md-success" @click="filtering"
               >Filter</md-button
             >
+          </div>
+
+          <md-switch
+            v-show="userId"
+            class="md-primary"
+            v-model="filter.subscribed"
+            >Notifie me</md-switch
+          >
+
+          <div v-show="userId" class="md-layout-item md-size-100 text-right">
+            <md-button class="md-raised md-info">Save filtering</md-button>
           </div>
         </div>
       </md-card-content>
@@ -208,14 +236,14 @@
 </template>
 <script>
 import axios from "axios";
-import { mapActions } from "vuex";
-// import DialogMap from "./DialogMap.vue";
+import { mapActions, mapGetters } from "vuex";
+import DialogMap from "./DialogMap.vue";
 import EventBus from "../../event-bus";
 import Vue from "vue";
 
 export default {
   components: {
-    // DialogMap,
+    DialogMap,
   },
   name: "login-form",
   props: {
@@ -228,6 +256,7 @@ export default {
     selectedLocations() {
       return this.filter.selectedLocations;
     },
+    ...mapGetters(["userId"]),
   },
   watch: {
     $route(to, from) {
@@ -276,6 +305,7 @@ export default {
     },
   },
   mounted() {
+    console.log(this.userId);
     axios
       .get("http://localhost:9090/get-form-props")
       .then((res) => {
@@ -314,8 +344,9 @@ export default {
         heatingType: this.setArray(this.$route.query.heatingType),
         floors: this.setArray(this.$route.query.floor),
         furniture: this.setArray(this.$route.query.furniture),
-        // coordinates: null,
+        coordinates: null,
         pictures: Boolean(this.$route.query.hasPictures),
+        subscribed: false,
       },
     };
   },
@@ -354,8 +385,30 @@ export default {
           ),
         })
         .catch((err) => {});
-        this.$sidebar.displaySidebar(!this.$sidebar.showSidebar);
+      this.$sidebar.displaySidebar(!this.$sidebar.showSidebar);
+
+      // console.log("coordinates: " + this.filter.coordinates);
     },
+    clearFilters(){
+      this.filter = {
+        selectedLocations: null,
+        selectedMicroLocations: null,
+        selectedMaxPrice: null,
+        selectedMinPrice: null,
+        selectedMaxArea: null,
+        selectedMinArea: null,
+        selectedMaxRooms: null,
+        selectedMinRooms: null,
+        adType: null,
+        realEstateType: null,
+        heatingType: null,
+        floors: null,
+        furniture: null,
+        coordinates: null,
+        pictures: false,
+        subscribed: false,
+      }
+    }
   },
 };
 </script>
