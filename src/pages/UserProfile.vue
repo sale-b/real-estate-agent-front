@@ -56,7 +56,7 @@ export default {
           this.scrollToTop();
         })
       .catch((error) => {
-        this.notifyVue("top", "center", error.response.data);
+        this.notifyVue("top", "center", error.response.data.message);
       });
   },
   methods: {

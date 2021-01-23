@@ -106,7 +106,7 @@ export default {
             this.emailadress = null;
             this.password = null;
             this.confirmPassword = null;
-            this.notifyVue("top", "center", error.response.data);
+            this.notifyVue("top", "center", error.response.data.message);
           });
       }
     },

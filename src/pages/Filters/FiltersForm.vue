@@ -219,15 +219,8 @@
             >
           </div>
 
-          <md-switch
-            v-show="userId"
-            class="md-primary"
-            v-model="filter.subscribed"
-            >Notifie me</md-switch
-          >
-
           <div v-show="userId" class="md-layout-item md-size-100 text-right">
-            <md-button class="md-raised md-info">Save filtering</md-button>
+            <dialog-save-filter :filters = filter></dialog-save-filter>
           </div>
         </div>
       </md-card-content>
@@ -240,10 +233,12 @@ import { mapActions, mapGetters } from "vuex";
 import DialogMap from "./DialogMap.vue";
 import EventBus from "../../event-bus";
 import Vue from "vue";
+import DialogSaveFilter from './DialogSaveFilter.vue';
 
 export default {
   components: {
     DialogMap,
+    DialogSaveFilter,
   },
   name: "login-form",
   props: {
@@ -256,7 +251,7 @@ export default {
     selectedLocations() {
       return this.filter.selectedLocations;
     },
-    ...mapGetters(["userId"]),
+   ...mapGetters(["userId"]),
   },
   watch: {
     $route(to, from) {
@@ -305,7 +300,6 @@ export default {
     },
   },
   mounted() {
-    console.log(this.userId);
     axios
       .get("http://localhost:9090/get-form-props")
       .then((res) => {
@@ -318,7 +312,7 @@ export default {
         this.furnitures = res.data.furnitureTypes;
       })
       .catch((error) => {
-        this.notifyVue("top", "center", error.response.data);
+        this.notifyVue("top", "center", error.response.data.message);
       });
   },
   data() {
@@ -346,7 +340,6 @@ export default {
         furniture: this.setArray(this.$route.query.furniture),
         coordinates: null,
         pictures: Boolean(this.$route.query.hasPictures),
-        subscribed: false,
       },
     };
   },

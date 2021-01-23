@@ -90,7 +90,7 @@ export default {
           .catch((error) => {
             this.input.email = null;
             this.input.password = null;
-            this.notifyVue("top", "center", error.response.data);
+            this.notifyVue("top", "center", error.response.data.message);
           });
       }
     },

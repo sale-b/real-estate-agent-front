@@ -132,7 +132,7 @@ export default {
           this.ad = res.data;
         })
         .catch((error) => {
-          this.notifyVue("top", "center", error.response.data);
+          this.notifyVue("top", "center", error.response.data.message);
         });
     },
   },
