@@ -42,8 +42,6 @@
 import Pagination from "./../components/Pagination";
 import AdCard from "../components/Cards/AdCard.vue";
 import axios from "axios";
-import Vue from "vue";
-import EventBus from "./../event-bus";
 
 export default {
   components: {

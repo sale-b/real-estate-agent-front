@@ -220,7 +220,7 @@
           </div>
 
           <div v-show="userId" class="md-layout-item md-size-100 text-right">
-            <dialog-save-filter :filters = filter></dialog-save-filter>
+            <dialog-save-filter :filters = "filter"></dialog-save-filter>
           </div>
         </div>
       </md-card-content>
@@ -229,11 +229,10 @@
 </template>
 <script>
 import axios from "axios";
-import { mapActions, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 import DialogMap from "./DialogMap.vue";
-import EventBus from "../../event-bus";
-import Vue from "vue";
-import DialogSaveFilter from './DialogSaveFilter.vue';
+import DialogSaveFilter from "./DialogSaveFilter.vue";
+import EventBus from "./../../event-bus";
 
 export default {
   components: {
@@ -251,7 +250,7 @@ export default {
     selectedLocations() {
       return this.filter.selectedLocations;
     },
-   ...mapGetters(["userId"]),
+    ...mapGetters(["userId"]),
   },
   watch: {
     $route(to, from) {
@@ -314,6 +313,10 @@ export default {
       .catch((error) => {
         this.notifyVue("top", "center", error.response.data.message);
       });
+
+    EventBus.$on("filterSelected", (filter) => {
+      this.filter = filter;
+    });
   },
   data() {
     return {
@@ -382,7 +385,7 @@ export default {
 
       // console.log("coordinates: " + this.filter.coordinates);
     },
-    clearFilters(){
+    clearFilters() {
       this.filter = {
         selectedLocations: null,
         selectedMicroLocations: null,
@@ -400,8 +403,8 @@ export default {
         coordinates: null,
         pictures: false,
         subscribed: false,
-      }
-    }
+      };
+    },
   },
 };
 </script>
