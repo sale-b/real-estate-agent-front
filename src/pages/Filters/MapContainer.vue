@@ -15,25 +15,42 @@ import Map from "ol/Map";
 import View from "ol/View";
 import { OSM, Vector as VectorSource } from "ol/source";
 import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer";
+import GeoJSON from "ol/format/GeoJSON";
 import { useGeographic } from "ol/proj";
 
 export default {
   name: "MapContainer",
   components: {},
   props: {
-    geojson: Object,
+    coordinates: Array,
   },
-  data: () => ({
-    raster: null,
-    source: null,
-    vector: null,
-    map: null,
-    draw: null,
-    coordinates: null,
-  }),
+  computed: {
+    geojson() {
+      return {
+        type: "Feature",
+        properties: {
+          name: "default object",
+          quality: "top",
+        },
+        geometry: {
+          type: "Polygon",
+          coordinates: [this.coordinates],
+        },
+      };
+    },
+  },
+  data() {
+    return {
+      raster: null,
+      source: null,
+      vector: null,
+      map: null,
+      draw: null,
+    };
+  },
   mounted() {
     useGeographic();
-    this.source = new VectorSource({ wrapX: false });
+    this.source = new VectorSource({ features: [] });
 
     this.raster = new TileLayer({
       source: new OSM(),
@@ -49,6 +66,7 @@ export default {
       view: new View({
         center: [20.457273, 44.787197],
         zoom: 13,
+        constrainResolution: true,
       }),
     });
 
@@ -60,8 +78,25 @@ export default {
     this.map.addInteraction(this.draw);
 
     this.draw.on("drawstart", this.clear);
+
+    this.updateSource(this.geojson);
   },
   methods: {
+    updateSource(geojson) {
+      if (geojson.geometry.coordinates[0] != null) {
+        const view = this.map.getView();
+        const source = this.vector.getSource();
+
+        const features = new GeoJSON({
+          featureProjection: "EPSG:4326",
+        }).readFeatures(geojson);
+
+        source.clear();
+        source.addFeatures(features);
+
+        view.fit(source.getExtent());
+      }
+    },
     clear() {
       this.map.getLayers().getArray()[1].getSource().clear();
     },
@@ -69,10 +104,9 @@ export default {
     read() {
       let feature = this.vector.getSource().getFeatures()[0];
       if (feature != null) {
-        this.coordinates = feature.getGeometry().getCoordinates()[0];
-        this.$emit("coordinates", JSON.stringify(this.coordinates));
+        this.$emit("coordinates", feature.getGeometry().getCoordinates()[0]);
       } else {
-        console.log("ERROR");
+        this.$emit("coordinates", null);
       }
     },
     undo() {

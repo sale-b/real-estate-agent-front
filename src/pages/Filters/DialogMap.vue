@@ -5,6 +5,7 @@
 
       <div class="cell">
         <map-container
+          :coordinates="coordinates"
           v-on:coordinates="finishSelectingArea"
           ref="map"
         ></map-container>
@@ -12,6 +13,7 @@
 
       <md-dialog-actions>
         <md-button class="md-info" @click="showDialog = false">Close</md-button>
+        <md-button class="md-info" @click="clear">Clear map</md-button>
         <md-button class="md-info" @click="undo">Undo</md-button>
         <md-button class="md-info" @click="read">Save</md-button>
       </md-dialog-actions>
@@ -31,6 +33,14 @@ export default {
   components: {
     MapContainer,
   },
+  props: {
+    coordinates: Array,
+  },
+  watch: {
+    coordinates() {
+      return this.coordinates;
+    },
+  },
   methods: {
     finishSelectingArea(value) {
       this.$emit("coordinates", value);
@@ -42,6 +52,9 @@ export default {
     },
     undo() {
       this.$refs.map.undo();
+    },
+    clear() {
+      this.$refs.map.clear();
     },
     openDialog() {
       this.showDialog = true;

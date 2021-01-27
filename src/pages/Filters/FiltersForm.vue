@@ -4,7 +4,7 @@
       <h3 style="text-align: center">Filters</h3>
 
       <dialog-map
-        v-show="userId"
+        :coordinates="filter.coordinates"
         v-on:coordinates="filter.coordinates = $event"
       ></dialog-map>
 
@@ -220,7 +220,7 @@
           </div>
 
           <div v-show="userId" class="md-layout-item md-size-100 text-right">
-            <dialog-save-filter :filters = "filter"></dialog-save-filter>
+            <dialog-save-filter :filters="filter"></dialog-save-filter>
           </div>
         </div>
       </md-card-content>
@@ -277,7 +277,9 @@ export default {
       this.filter.heatingType = this.setArray(this.$route.query.heatingType);
       this.filter.floors = this.setArray(this.$route.query.floor);
       this.filter.furniture = this.setArray(this.$route.query.furniture);
-      this.filter.pictures = Boolean(this.$route.query.hasPictures);
+      this.filter.pictures = this.$route.query.hasPictures == "true";
+      this.filter.coordinates = this.setCoordinates(this.$route.query.coordinates);
+
     },
     selectedLocations: function (val, oldVal) {
       if (oldVal != null) {
@@ -293,7 +295,6 @@ export default {
             );
           })
           .catch((error) => {
-            console.log(error);
           });
       }
     },
@@ -341,12 +342,27 @@ export default {
         heatingType: this.setArray(this.$route.query.heatingType),
         floors: this.setArray(this.$route.query.floor),
         furniture: this.setArray(this.$route.query.furniture),
-        coordinates: null,
-        pictures: Boolean(this.$route.query.hasPictures),
+        pictures: this.$route.query.hasPictures == "true",
+        coordinates: this.setCoordinates(this.$route.query.coordinates),
       },
     };
   },
   methods: {
+    setCoordinates(value) {
+      if (value != null) {
+        let rearanged = [];
+        if (value[0].constructor === String) {
+          for (let i = 0; i < value.length; i++) {
+            rearanged.push(value[i].split(",").map(Number));
+          }
+          return rearanged;
+        } else {
+          return value;
+        }
+      } else {
+        return null;
+      }
+    },
     setArray(value) {
       if (Array.isArray(value)) return value;
       if (value != null) return [value];
@@ -377,13 +393,13 @@ export default {
               floor: this.filter.floors,
               furniture: this.filter.furniture,
               hasPictures: this.filter.pictures,
+              coordinates: this.setCoordinates(this.filter.coordinates),
             }).filter(([_, v]) => v != null)
           ),
         })
         .catch((err) => {});
       this.$sidebar.displaySidebar(!this.$sidebar.showSidebar);
 
-      // console.log("coordinates: " + this.filter.coordinates);
     },
     clearFilters() {
       this.filter = {

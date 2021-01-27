@@ -51,8 +51,8 @@ export default {
         })
         .then((res) => {
           this.ads = res.data.ads;
-          // this.infoPagination = res.data.pagination.currentPage;
-          // this.pageCount = res.data.pagination.totalPages;
+          this.infoPagination = res.data.pagination.currentPage;
+          this.pageCount = res.data.pagination.totalPages;
           this.scrollToTop();
         })
       .catch((error) => {

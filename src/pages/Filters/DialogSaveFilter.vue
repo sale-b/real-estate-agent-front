@@ -42,7 +42,6 @@ export default {
     saveFiltering() {
       this.filters.subscribed = this.subscribed;
       this.filters.tittle = this.filterName;
-      // console.log(this.filters);
 
       axios
         .post(
@@ -65,7 +64,6 @@ export default {
             verticalAlign: "top",
             type: "success",
           });
-          console.log(res.data);
           EventBus.$emit("filterSaved", res.data);
         })
         .catch((error) => {

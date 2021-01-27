@@ -65,6 +65,7 @@ export default {
         floor: this.set(this.$route.query.floor),
         furniture: this.set(this.$route.query.furniture),
         hasPictures: this.$route.query.hasPictures,
+        coordinates: this.setCoordinates(this.$route.query.coordinates),
       });
     },
   },
@@ -86,6 +87,7 @@ export default {
         floor: this.set(this.$route.query.floor),
         furniture: this.set(this.$route.query.furniture),
         hasPictures: this.$route.query.hasPictures,
+        coordinates: this.setCoordinates(this.$route.query.coordinates),
       },
       infoPagination: parseInt(this.$route.params.id),
       pageCount: 1,
@@ -99,6 +101,21 @@ export default {
       if (Array.isArray(value)) return value;
       if (value != null) return [value];
       return null;
+    },
+    setCoordinates(value){
+      if (value != null) {
+        let rearanged = [];
+        if (value[0].constructor === String) {
+          for (let i = 0; i < value.length; i++) {
+            rearanged.push(value[i].split(",").map(Number));
+          }
+          return rearanged;
+        } else {
+          return value;
+        }
+      } else {
+        return null;
+      }
     },
     openDetails(index, id) {
       this.$refs.adDetails[index].openDetails(id);
@@ -126,10 +143,14 @@ export default {
         type: "danger",
       });
     },
-    change(page) {
-      this.$router.push({ name: "All Ads", 
-      params: {id: this.infoPagination.toString()},
-      query: this.$route.query}).catch((err) => {});
+    change() {
+      this.$router
+        .push({
+          name: "All Ads",
+          params: { id: this.infoPagination.toString() },
+          query: this.$route.query,
+        })
+        .catch((err) => {});
     },
     fetchData(page, filters) {
       axios

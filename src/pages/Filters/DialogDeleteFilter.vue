@@ -45,7 +45,7 @@ export default {
           },
         })
         .then((res) => {
-          console.log(res.data);
+
           this.showDialog = false;
           if (res.data.deleted == 1){
             this.$emit("filterDeleted", this.filter.id);
