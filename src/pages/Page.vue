@@ -29,6 +29,7 @@
     <div class="pagination-holder">
       <pagination
         type="info"
+        v-if="pageCount > 1"
         v-on:input="change"
         v-model="infoPagination"
         :page-count="pageCount"
@@ -64,7 +65,7 @@ export default {
         heatingType: this.set(this.$route.query.heatingType),
         floor: this.set(this.$route.query.floor),
         furniture: this.set(this.$route.query.furniture),
-        hasPictures: this.$route.query.hasPictures,
+        hasPictures: this.bool(this.$route.query.hasPictures),
         coordinates: this.setCoordinates(this.$route.query.coordinates),
       });
     },
@@ -86,7 +87,7 @@ export default {
         heatingType: this.set(this.$route.query.heatingType),
         floor: this.set(this.$route.query.floor),
         furniture: this.set(this.$route.query.furniture),
-        hasPictures: this.$route.query.hasPictures,
+        hasPictures: this.bool(this.$route.query.hasPictures),
         coordinates: this.setCoordinates(this.$route.query.coordinates),
       },
       infoPagination: parseInt(this.$route.params.id),
@@ -97,12 +98,16 @@ export default {
     this.fetchData(this.infoPagination, this.infoFilters);
   },
   methods: {
+    bool(val) {
+      if (val == true || val == "true") return true;
+      return false;
+    },
     set(value) {
       if (Array.isArray(value)) return value;
       if (value != null) return [value];
       return null;
     },
-    setCoordinates(value){
+    setCoordinates(value) {
       if (value != null) {
         let rearanged = [];
         if (value[0].constructor === String) {

@@ -277,9 +277,10 @@ export default {
       this.filter.heatingType = this.setArray(this.$route.query.heatingType);
       this.filter.floors = this.setArray(this.$route.query.floor);
       this.filter.furniture = this.setArray(this.$route.query.furniture);
-      this.filter.pictures = this.$route.query.hasPictures == "true";
-      this.filter.coordinates = this.setCoordinates(this.$route.query.coordinates);
-
+      this.filter.pictures = this.bool(this.$route.query.hasPictures);
+      this.filter.coordinates = this.setCoordinates(
+        this.$route.query.coordinates
+      );
     },
     selectedLocations: function (val, oldVal) {
       if (oldVal != null) {
@@ -294,8 +295,7 @@ export default {
               (el) => this.microLocations.includes(el)
             );
           })
-          .catch((error) => {
-          });
+          .catch((error) => {});
       }
     },
   },
@@ -342,12 +342,16 @@ export default {
         heatingType: this.setArray(this.$route.query.heatingType),
         floors: this.setArray(this.$route.query.floor),
         furniture: this.setArray(this.$route.query.furniture),
-        pictures: this.$route.query.hasPictures == "true",
+        pictures: this.bool(this.$route.query.hasPictures),
         coordinates: this.setCoordinates(this.$route.query.coordinates),
       },
     };
   },
   methods: {
+    bool(val) {
+      if (val == true || val == "true") return true;
+      return false;
+    },
     setCoordinates(value) {
       if (value != null) {
         let rearanged = [];
@@ -392,14 +396,13 @@ export default {
               heatingType: this.filter.heatingType,
               floor: this.filter.floors,
               furniture: this.filter.furniture,
-              hasPictures: this.filter.pictures,
+              hasPictures: this.bool(this.filter.pictures),
               coordinates: this.setCoordinates(this.filter.coordinates),
             }).filter(([_, v]) => v != null)
           ),
         })
         .catch((err) => {});
       this.$sidebar.displaySidebar(!this.$sidebar.showSidebar);
-
     },
     clearFilters() {
       this.filter = {
