@@ -74,6 +74,7 @@ export default {
           },
         })
         .then((res) => {
+          res.data.savedFilter.id=filterId;
           EventBus.$emit("filterSelected", res.data.savedFilter);
         })
         .catch(() => {
