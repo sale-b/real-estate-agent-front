@@ -12,6 +12,42 @@
         <div class="md-layout">
           <div class="md-layout-item md-small-size-100 md-size-100">
             <md-field>
+              <label for="ad-types">Ad type</label>
+              <md-select
+                v-model="filter.adType"
+                name="ad-types"
+                id="ad-types"
+                multiple
+              >
+                <md-option
+                  v-for="adType in adTypes"
+                  :key="adType"
+                  :value="adType"
+                  >{{ adType }}</md-option
+                >
+              </md-select>
+            </md-field>
+          </div>
+          <div class="md-layout-item md-small-size-100 md-size-100">
+            <md-field>
+              <label for="real-estate-types">Real estate type</label>
+              <md-select
+                v-model="filter.realEstateType"
+                name="real-estate-types"
+                id="real-estate-types"
+                multiple
+              >
+                <md-option
+                  v-for="realEstateType in realEstateTypes"
+                  :key="realEstateType"
+                  :value="realEstateType"
+                  >{{ realEstateType }}</md-option
+                >
+              </md-select>
+            </md-field>
+          </div>
+          <div class="md-layout-item md-small-size-100 md-size-100">
+            <md-field>
               <label for="locations">Locations</label>
               <md-select
                 v-model="filter.selectedLocations"
@@ -104,42 +140,6 @@
                 type="text"
                 style="height: 60px; padding: 30px 0 0 0"
               ></md-input>
-            </md-field>
-          </div>
-          <div class="md-layout-item md-small-size-100 md-size-100">
-            <md-field>
-              <label for="ad-types">Ad type</label>
-              <md-select
-                v-model="filter.adType"
-                name="ad-types"
-                id="ad-types"
-                multiple
-              >
-                <md-option
-                  v-for="adType in adTypes"
-                  :key="adType"
-                  :value="adType"
-                  >{{ adType }}</md-option
-                >
-              </md-select>
-            </md-field>
-          </div>
-          <div class="md-layout-item md-small-size-100 md-size-100">
-            <md-field>
-              <label for="real-estate-types">Real estate type</label>
-              <md-select
-                v-model="filter.realEstateType"
-                name="real-estate-types"
-                id="real-estate-types"
-                multiple
-              >
-                <md-option
-                  v-for="realEstateType in realEstateTypes"
-                  :key="realEstateType"
-                  :value="realEstateType"
-                  >{{ realEstateType }}</md-option
-                >
-              </md-select>
             </md-field>
           </div>
           <div class="md-layout-item md-small-size-100 md-size-100">
@@ -308,7 +308,7 @@ export default {
         this.adTypes = res.data.adTypes;
         this.realEstateTypes = res.data.realEstateTypes;
         this.heatingTypes = res.data.heatingTypes;
-        this.floors = res.data.floors;
+        this.floors = this.sortFloors(res.data.floors);
         this.furnitures = res.data.furnitureTypes;
       })
       .catch((error) => {
@@ -348,6 +348,14 @@ export default {
     };
   },
   methods: {
+    sortFloors(floorsArray) {
+      let str = [],
+        num = [];
+      floorsArray.forEach((e) => (isNaN(e) ? str.push(e) : num.push(e)));
+      str.sort();
+      num.sort((a, b) => a - b);
+      return str.concat(num);
+    },
     bool(val) {
       if (val == true || val == "true") return true;
       return false;
