@@ -18,7 +18,9 @@
       <p class="ad-tittle">
         {{ content }}
       </p>
-      <div class="price-tag">{{ price != null ? price.toLocaleString() : 0 }} &euro;</div>
+      <div class="price-tag">
+        {{ price != null ? price.toLocaleString() : 0 }} &euro;
+      </div>
     </template>
 
     <template slot="footer">
@@ -29,8 +31,8 @@
         </div>
 
         <div class="stats" style="padding: 3px 10px 0px 0px">
-          <md-icon>perm_phone_msg</md-icon>
-          <a :href="'tel:' + phone">{{ phone }}</a>
+          <md-icon>location_on</md-icon>
+          {{ location }}
         </div>
 
         <div class="stats" style="padding: 0px 10px 0px 0px">
@@ -44,7 +46,16 @@
           {{ rooms }}
         </div>
 
-        <div v-if="furniture != null" class="stats" style="padding: 0px 10px 0px 0px">
+        <div class="stats" style="padding: 3px 10px 0px 0px">
+          <div>Floor:</div>
+          {{ floor }}
+        </div>
+
+        <div
+          v-if="furniture != null"
+          class="stats"
+          style="padding: 0px 10px 0px 0px"
+        >
           <div>Furniture:</div>
           {{ furniture }}
         </div>
@@ -71,11 +82,12 @@ export default {
     "content",
     "imgUrl",
     "date",
-    "phone",
+    "location",
     "space",
     "rooms",
     "furniture",
-    "price"
+    "floor",
+    "price",
   ],
 };
 </script>

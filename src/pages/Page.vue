@@ -15,11 +15,12 @@
             :content="ad.description"
             :img-url="ad.img_url"
             :date="getFormattedDate(ad.created_on)"
-            :phone="ad.phone"
+            :location="ad.location"
             :space="ad.living_space_area"
             :rooms="ad.rooms_number"
             :furniture="ad.furniture"
             :price="ad.price"
+            :floor="ad.floor"
             :id="ad.id"
             ref="adDetails"
           ></ad-card>
