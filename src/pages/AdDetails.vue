@@ -44,12 +44,81 @@
           </md-card-header>
 
           <md-card-content>
+            <div>
+              <md-list>
+                <md-subheader>Details</md-subheader>
+                <div v-if="ad.ad_type">
+                  <md-list-item>Ad type: {{ ad.ad_type }}</md-list-item>
+                  <md-divider></md-divider>
+                </div>
+
+                <div v-if="ad.type">
+                  <md-list-item>Real estate type: {{ ad.type }}</md-list-item>
+                  <md-divider></md-divider>
+                </div>
+                <div v-if="ad.living_space_area">
+                  <md-list-item
+                    ><div>
+                      Living space area: {{ ad.living_space_area }} m<sup
+                        >2</sup
+                      >
+                    </div></md-list-item
+                  >
+                  <md-divider></md-divider>
+                </div>
+                <div v-if="ad.rooms_number">
+                  <md-list-item
+                    >Number of rooms: {{ ad.rooms_number }}</md-list-item
+                  >
+                  <md-divider></md-divider>
+                </div>
+                <div v-if="ad.floor">
+                  <md-list-item>Floor: {{ ad.floor }}</md-list-item>
+                  <md-divider></md-divider>
+                </div>
+                <div v-if="ad.location">
+                  <md-list-item
+                    ><div style="white-space: normal">
+                      Location: {{ ad.location + ", " + ad.micro_location }}
+                    </div></md-list-item
+                  >
+                  <md-divider></md-divider>
+                </div>
+
+                <md-divider></md-divider>
+
+                <md-subheader>Phone</md-subheader>
+
+                <md-list-item>
+                  <md-icon style="margin-right: 12px" class="md-primary"
+                    >phone</md-icon
+                  >
+
+                  <div class="md-list-item-text">
+                    <a
+                      style="font-size: 18px"
+                      :href="'tel:' + ad.phone.replace(/\D/g, '')"
+                      >{{ ad.phone }}</a
+                    >
+                  </div>
+                </md-list-item>
+                <md-divider></md-divider>
+                <md-subheader>Price</md-subheader>
+                <md-list-item>
+                  <div class="md-list-item-text">{{ ad.price }} &euro;</div>
+                </md-list-item>
+                <md-divider></md-divider>
+              </md-list>
+            </div>
+            <br />
             {{ ad.description }}
           </md-card-content>
         </md-card>
 
         <div style="width: 100%; height: 300px; border: 3px solid #73ad21">
-          <map-container-pin :geolocation="getCoordinates()"></map-container-pin>
+          <map-container-pin
+            :geolocation="getCoordinates()"
+          ></map-container-pin>
         </div>
       </div>
     </div>
@@ -86,12 +155,12 @@ export default {
   methods: {
     getCoordinates() {
       let xy = this.ad.geolocation.split(",");
-      if (xy[0] > xy[1])
-      {return JSON.parse(
-        "[" + this.ad.geolocation.split(",").reverse().join(",") + "]"
-      );} else {
+      if (xy[0] > xy[1]) {
         return JSON.parse(
-        "[" + this.ad.geolocation + "]" );
+          "[" + this.ad.geolocation.split(",").reverse().join(",") + "]"
+        );
+      } else {
+        return JSON.parse("[" + this.ad.geolocation + "]");
       }
     },
     isBlock(index) {
